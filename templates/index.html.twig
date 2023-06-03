@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Strona o filmach
+{% endblock %}
+
+{% block body %}
+    {% for movie in movies %}
+        <li>
+            {{ movie }}
+        </li>
+    {% endfor %}
+    {{ _self }}
+    <br>
+    {{ _charset }}
+    <br>
+    {{ _author }}
+{% endblock %}
