@@ -2,23 +2,55 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\Movie;
+use App\Repository\MovieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MovieController extends AbstractController
 {
+    private $em;
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+    
     // all movies
     #[Route('/movies', name: 'movies')]
     public function index(): Response
     {
-        $movies = ["Inception", "Loki", "Black Widow"];
+        $repository = $this->em->getRepository(Movie::class);
+        // findAll() - SELECT * FROM movie
+        $movies = $repository->findAll();
+        // find(ID) - SELECT * FROM movie WHERE id = ID
+        $movies = $repository->find(5);
+        // findBy() - SELECT * FROM movie ORDER BY id DESC
+        $movies = $repository->findBy([], ['id' => 'DESC']);
+        // findOneBy() - SELECT * FROM movie WHERE id = 5 AND title = 'Dark Knight' ORDER BY id DESC
+        $movies = $repository->findOneBy(['id' => 5, 'title' => 'Dark Knight'], ['id' => 'DESC']);
+        // count() - SELECT COUNT() FROM movie WHERE id = 5
+        $movies = $repository->count(['id' => 5]);
 
-        return $this->render('index.html.twig', array(
-            'movies' => $movies
-        ));
+        $movies = $repository->getClassName();
+        
+        //dd($movies);
+
+        return $this->render('index.html.twig');
     }
+
+    /* inny sposób użycia Repository 
+    public function index(MovieRepository $movieRepository): Response
+    {
+        $movies = $movieRepository->findAll();
+        dd($movies);
+
+        return $this->render('index.html.twig');
+    } 
+    */
+    
     
     
     // one movie

@@ -1,0 +1,1 @@
+console.log('Pierwsza metoda dołącznia plików js');
