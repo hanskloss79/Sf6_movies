@@ -1,1 +1,1 @@
-alert('A oto druga metoda!!!');
+//alert('A oto druga metoda!!!');
